@@ -27,6 +27,10 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm2')">注册</el-button>
         </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="tokenTest()">token测试</el-button>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -63,6 +67,7 @@
   }
 </style>
 <script>
+  import jtw_decode from 'jwt-decode';
     export default {
         data() {
           var validate = (rule,value,callback)=>{
@@ -136,7 +141,7 @@
           submitForm(){
             this.$refs['registForm'].validate(valid =>{
               if(valid == true){
-              this.$axios.post('http://localhost:8080/register/test',this.registerUser).then(res=>{
+              this.$axios.post('http://localhost:8080/user/register',this.registerUser).then(res=>{
                 console.log('success');
               }).catch(error=>{
                 console.log('error!!');
@@ -144,6 +149,15 @@
             }else{
                 alert('error');
             }
+            })
+          },
+          tokenTest(){
+            this.$axios.post('http://localhost:8080/user/token',{
+              username : 'xuyu',
+              age : '22'
+            }).then(res=>{
+              console.info("token is ",res.data);
+              console.info(jtw_decode(res.data));
             })
           }
         }
