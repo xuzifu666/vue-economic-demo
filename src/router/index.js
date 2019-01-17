@@ -4,7 +4,9 @@ import Main from '@/components/Main'
 import Register from '@/components/Register'
 import NotFound from '@/components/404'
 
+
 Vue.use(Router)
+
 
 export default new Router({
   routes: [

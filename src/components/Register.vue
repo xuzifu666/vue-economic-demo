@@ -4,12 +4,12 @@
       <div class="register_title">
         <span>亚洲金融论坛</span>
       </div>
-      <el-form :model="registerUser" status-icon :rules="rules" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="usernanme">
+      <el-form :model="registerUser" status-icon :rules="rules" ref="registForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名" prop="username">
           <el-input type="text" v-model="registerUser.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input type="text" v-model.number="registerUser.email"></el-input>
+          <el-input  v-model.number="registerUser.email"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="password">
           <el-input type="password" v-model="registerUser.password" autocomplete="off"></el-input>
@@ -65,6 +65,13 @@
 <script>
     export default {
         data() {
+          var validate = (rule,value,callback)=>{
+            if(value !== this.registerUser.password){
+              callback(new Error('必须和第一次输入的密码一致'));
+            }else {
+              return callback();
+            }
+          };
           return {
             registerUser : {
               username : '',
@@ -73,13 +80,71 @@
               password2 : '',
               role : ''
             },
-            rules : {}
+            rules : {
+              username : [
+                {
+                  required : true,
+                  message : '用户名不能为空',
+                  trigger : "blur"
+                },
+                {
+                  max : 10,
+                  min : 3,
+                  message : '长度不符合要求',
+                  trigger : 'blur'
+                }
+              ],
+              email : [
+                {
+                  type : 'email',
+                  required : true,
+                  message : '邮箱格式不正确',
+                  trigger : "blur"
+                }
+              ],
+              password : [
+                {
+                  required : true,
+                  message : '密码不能为空',
+                  trigger : 'blur'
+                },
+                {
+                  min : 2,
+                  max : 8,
+                  message : '密码长度不能小于2，大于8',
+                  trigger : 'blur'
+                }
+              ],
+              password2 : [
+                {
+                  validator : validate,
+                  trigger : 'blur'
+                }
+              ],
+              role : [
+                {
+                  required : true,
+                  message : '用户角色需要选择',
+                  trigger : 'blur'
+                }
+              ]
+            }
           }
         },
         components: {},
         methods : {
           submitForm(){
-
+            this.$refs['registForm'].validate(valid =>{
+              if(valid == true){
+              this.$axios.post('http://localhost:8080/register/test',this.registerUser).then(res=>{
+                console.log('success');
+              }).catch(error=>{
+                console.log('error!!');
+                });
+            }else{
+                alert('error');
+            }
+            })
           }
         }
     }
