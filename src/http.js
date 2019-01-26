@@ -17,6 +17,8 @@ function stopLoading() {
 
 axios.interceptors.request.use(config=>{
   startLoading();
+  config.headers['X-TOKEN'] = localStorage.getItem('token')
+  console.info('设置头属性')
   return config;
 },
 error => {

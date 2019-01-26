@@ -55,6 +55,9 @@
               if(valid){
                 this.$axios.post("http://localhost:8080/user/login",this.loginUser)
                   .then(res=>{
+                    const token = res.data;
+                    console.log(res.data);
+                    localStorage.setItem('token',token);
                     this.$router.push("/index")
                   })
                   .catch(error=>{

@@ -4,12 +4,15 @@ import Register from '@/components/Register'
 import NotFound from '@/components/404'
 import Login from '@/components/Login'
 import Index from '@/components/Main'
+import Home from '@/components/Home'
+import UserInfo from '@/components/UserInfo'
+import FoundList from '@/components/FoundList'
 
 
 Vue.use(Router)
 
 
-export default new Router({
+var router = new Router({
   routes: [
     {
       path: '/',
@@ -28,7 +31,28 @@ export default new Router({
     {
       path : '/index',
       name : 'index',
-      component : Index
+      component : Index,
+      children : [
+        {
+          path : '',
+          component : Home
+        },
+        {
+          path : 'home',
+          name : 'home',
+          component: Home
+        },
+        {
+          path : 'userinfo',
+          name : 'userinfo',
+          component : UserInfo
+        },
+        {
+          path : 'foundList',
+          name : 'foundList',
+          component : FoundList
+        }
+      ]
     },
     {
       path : '*',
@@ -36,4 +60,19 @@ export default new Router({
       component : NotFound
     }
   ]
-})
+});
+
+router.beforeEach((to,from,next)=>{
+  var isLogin = false;
+  if(localStorage.getItem('token') != undefined){
+    isLogin = true;
+  }
+  if(to.path == '/login' || to.path == '/register'){
+    next();
+  }else{
+    isLogin ? next() : next('/login');
+  }
+
+});
+
+export default router;

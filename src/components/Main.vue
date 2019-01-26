@@ -1,27 +1,46 @@
 <template>
+  <div>
   <div class="bg">
-
+    <Header></Header>
+  </div>
+    <HomeLeft></HomeLeft>
+    <router-view></router-view>
   </div>
 </template>
 
 <style scoped>
-  .bg{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: -8px;
-    top: -8px;
-    background: url(../assets/bg.jpg) no-repeat center center;
-    background-size: 100% 100%;
-  }
 </style>
 <script>
+  import jwt_decode from 'jwt-decode'
+  import ElRow from "element-ui/packages/row/src/row";
+  import ElCol from "element-ui/packages/col/src/col";
+  import Header from './Header.vue'
+  import HomeLeft from './HomeLeft.vue'
+
     export default {
         data() {
           return {
-            msg : '这是主页'
+            msg : '这是主页',
+            username : '',
+            age : 0
           }
         },
-        components: {}
+        components: {
+          ElCol,
+          ElRow,
+          Header,
+          HomeLeft
+        },
+      created : function () {
+        var user = jwt_decode(localStorage.getItem('token'));
+        this.username = user.username;
+        this.age = user.age;
+      },
+      methods : {
+          cre(){
+            this.$store.commit('increase')
+          }
+      }
+
     }
 </script>
